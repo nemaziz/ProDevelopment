@@ -1,0 +1,3 @@
+# Ignore platform files
+Thumbs.db
+.DS_Store
