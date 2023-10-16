@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import datetime 
 
 
-path = """O:\\Nematov\\Web_scraping\\ProDevelopment\\commerce_estate"""
+path = """O:\\Nematov\\Web_scraping\\ProDevelopment\\commerce_estate\\NF"""
 
 path_sales = '{}\\data\\Sales.xlsx'.format(path)
 path_supply = '{}\\data\\Supply.xlsx'.format(path)

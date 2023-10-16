@@ -13,10 +13,9 @@ class Scraper:
         self.date = f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
         self.max_page()
         
-    
     def max_page(self): 
         page = 1
-        url = f'https://kf.expert/spb/office/prodazha?page={page}&pay_type_ids=1&separ_group_id=c1&currency_alias=rur&prices_key_prefix=sale_from_all&sessionId=123456'
+        url = f'https://kf.expert/office/prodazha?page={page}&pay_type_ids=1&separ_group_id=c1&currency_alias=rur&prices_key_prefix=sale_from_all&sessionId=123456'
         source = f'/vapi/listing_more_cards?page={page}&pay_type_ids=1&separ_group_id=c1&currency_alias=rur&prices_key_prefix=sale_from_all&sessionId=123456'
         first = Headers_NF().resp(url, source)
         self.max_page = first['cards'][-2]['pagination']['pages'][-1]['value']
@@ -39,8 +38,9 @@ class Scraper:
                     'Город' : 'Москва',
                     'longitude' : obj['coords'].split(',')[1] if obj['coords'] != None else '',
                     'latitude' : obj['coords'].split(',')[0] if obj['coords'] != None else '',
-                    'price' : int(obj['price']['begin'].replace('₽', '').replace(' ', '')) if '₽' in obj['price']['begin'] else\
-                            int(obj['price']['begin'].replace('$', '').replace(' ', '')) * 100 if '$' in obj['price']['begin'] else '',
+                    'price' : "{} {}".format(obj['price']['itemprop'], obj['price']['currency']),
+                            #int(obj['price']['begin'].replace('₽', '').replace(' ', '')) if '₽' in obj['price']['begin'] else\
+                            #int(obj['price']['begin'].replace('$', '').replace(' ', '')) * 100 if '$' in obj['price']['begin'] else '',
                     'Дата_сбора' : self.date,
                     'Тип сделки' : 'Купить коммерсию',
                     'latitude' : obj['coords'].split(',')[0] if obj['coords'] != None else '' , 
@@ -51,7 +51,6 @@ class Scraper:
             
             office_data += local
             
-        
         yield office_data
 
 
