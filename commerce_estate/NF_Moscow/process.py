@@ -2,12 +2,12 @@ import pandas as pd
 from datetime import datetime 
 
 
-path = """O:\\Nematov\\Web_scraping\\ProDevelopment\\commerce_estate\\NF"""
+path = """O:\\Nematov\\Web_scraping\\ProDevelopment\\commerce_estate\\NF_Moscow"""
 
 path_sales = '{}\\data\\Sales.xlsx'.format(path)
 path_supply = '{}\\data\\Supply.xlsx'.format(path)
 
-date = f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
+date = f'{datetime.now().day}/{datetime.now().month}/{datetime.now().year}'
 
 class Processing:
     

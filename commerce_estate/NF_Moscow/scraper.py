@@ -63,6 +63,7 @@ def main():
     new_data = pd.DataFrame(data)
     
     processor.update_data(new_data)
+    print('End')
     
 if __name__ == "__main__":
    main()
