@@ -16,8 +16,10 @@ def process_location(address, house_num):
             result += '' if tag not in address else '{} {}, '.format(address[tag], value)
         
         result += '' if not house_num else '{}'.format(house_num)
-        
-        return result
+
+        """Если номера дома нет, то надо убирать с конца запятую и пробел.
+        Во всех собранных объявлениях был номер дома, но решил написать проверку"""
+        return result if result[-2:] == ', ' else result[:-2]
 
 
 class Scraper:
@@ -28,7 +30,7 @@ class Scraper:
     def start_request(self):
         data = []
         
-        #Меняешь параметр, чтобы собирать данные для аренды и продажи
+        "Меняешь параметр, чтобы собирать данные для аренды и продажи"
         for action in ['sale', 'lease']:
             page = 1
             request = next(headers_etagi.get_json(1, action))
