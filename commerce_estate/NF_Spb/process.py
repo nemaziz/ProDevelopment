@@ -27,9 +27,9 @@ class Processing:
             sales = pd.read_excel(path_sales)
             supply = pd.read_excel(path_supply)
         
-        new_supply = new_data[~new_data['Ссылка'].isin(supply['Ссылка'])]
-        sold_supply = supply[~supply['Ссылка'].isin(new_data['Ссылка'])]
-        remaining_supply = supply[supply['Ссылка'].isin(new_data['Ссылка'])]
+        new_supply = new_data[~new_data['url'].isin(supply['url'])]
+        sold_supply = supply[~supply['url'].isin(new_data['url'])]
+        remaining_supply = supply[supply['url'].isin(new_data['url'])]
             
         if not new_supply.empty:
             save_supply = pd.concat([remaining_supply, new_supply])
