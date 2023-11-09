@@ -17,12 +17,12 @@ segments = [
 
 class Scraper:
     
-    def __init__(self, session) -> None:
-        self.session = session
-        self.LinksCollector = LinksCollector(self.session)
+    def __init__(self) -> None:
+        self.session = cloudscraper.create_scraper()
+        self.LinksCollector = LinksCollector()
         self.date = f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
-        
-    def max_page(self, url):
+    
+    def getsoup(self, url):
         response = self.session.get(url = url)
         response.raise_for_status()
         text = response.text
@@ -30,6 +30,11 @@ class Scraper:
             soup = BeautifulSoup(text, 'lxml')
         except:
             soup = BeautifulSoup(text, 'html.parser')
+        
+        return soup
+        
+    def max_page(self, url):
+        soup = self.getsoup(url) 
             
         pages = soup.select("div[class = 'pagination pagination--red']")[0].text.strip().split()
         
@@ -45,15 +50,15 @@ class Scraper:
                 for url in urls:
                     new_url = 'https://kf.expert' + url
                     data.append(self.collect_offer(new_url))
-                print(f'Для сегмента {segment} и страницы {1} собрано {len(urls)} объявлений')
+                print(f'Для сегмента {segment} и страницы {1} собрано {len(urls)} предложений')
+
             else:
                 for page in range(1, int(last_page) + 1):
                     url_segment = segment + f'?&page={page}#listing'
                     urls = self.LinksCollector.collect_links(url_segment)
                     for url in urls:
                         new_url = 'https://kf.expert' + url
-                        data.append(self.collect_offer(new_url))   
-                    
+                        data.append(self.collect_offer(new_url))
                     print(f'Для сегмента {segment} и страницы {page} собрано {len(urls)} предложений')
         yield data 
     
@@ -72,28 +77,46 @@ class Scraper:
             'name' : soup.select("h1[class = 'detail-jk__main-title']")[0].text
         }
 
-        dict_items = {'Тип здания': 'type_building',
-                    'Тип сделки': 'type_deal',
-                    'Стадия строительства': 'stage_construction',
-                    'Общая площадь': 'total_area',
-                    'Площадь в продажу': 'area_sale',
-                    'Площадь блока' : 'area_sale2',
-                    'Площадь в аренду' : 'area_sale3',
-                    'Витрины': 'showcases',
-                    'Входная группа': 'entry_group',
-                    'НДС': 'tax',
-                    'Высота потолков': 'height',
-                    'Этаж' : 'floor',
-                    'Этажность' : 'floors',
-                    'Мощность электроэнергии': 'electricity',
-                    'Отделка': 'decoration',
-                    'Город': 'city',
-                    'Район': 'district',
-                    'Метро': 'metro',
-                    'Адрес': 'address',
-                    'Год строительства' : 'year_construction',
-                    'Предложений в продажу' : 'offer_count',
-                    'Доход' : 'income'
+        dict_items = {
+                  'Тип здания': 'type_building',
+                  'Тип сделки': 'type_deal',
+                  'Стадия строительства': 'stage_construction',
+                  'Общая площадь': 'total_area',
+                  'Класс' : 'class',
+                  'Лифты' : 'elevator',
+                  'Электроснабжение' : 'electricity_on',
+                  'Планировка' : 'layout',
+                  'В стоимость включено' : 'price_includes',
+                  'Электричество' : 'electricity',
+                  'Площадь в продажу': 'area_sale',
+                  'Площадь блока' : 'area_sale2',
+                  'Площадь в аренду' : 'area_sale3',
+                  'Свободная площадь' : 'free_area',
+                  'Количество доступных блоков в аренду' : 'blocks_cnt',
+                  'Дополнительные характеристики' : 'addit_char',
+                  'Тип аренды' : 'type_rent',
+                  'Свободное кол-во рабочих мест' : 'workers_cnt',
+                  'Витрины': 'showcases',
+                  'Входная группа': 'entry_group',
+                  'НДС': 'tax',
+                  'Высота потолков': 'height',
+                  'Этаж' : 'floor',
+                  'Этажность' : 'floors',
+                  'Мощность электроэнергии': 'electricity_intensity',
+                  'Операционные расходы' : 'expenses',
+                  'Парковочный коэффициент' : 'parking_coef',
+                  'Шаг колонн' : 'column',
+                  'Площадь здания' : 'area_building',
+                  'Отделка': 'decoration',
+                  'Город': 'city',
+                  'Район': 'district',
+                  'Метро': 'metro',
+                  'Адрес': 'address',
+                  'Год строительства' : 'year_construction',
+                  'Предложений в продажу' : 'offer_sale_cnt',
+                  'Предложений в аренду' : 'offer_rent_cnt',
+                  'Эксклюзивный объект' : 'exclusive',
+                  'Доход' : 'income'
                     }
 
         dict_values = {}
@@ -107,7 +130,6 @@ class Scraper:
                     dict_values[key] = value
                 else:
                     dict_values[old_key] = value
-        
         
         try:
             description = soup.select("span[class = 'description__text']")[0].text.strip()
@@ -125,14 +147,28 @@ class Scraper:
             price_meter = soup.select("div[class = 'detail-jk-preview__price-meter active']")[0].text.replace('\xa0', '').strip()
         except:
             price_meter = ''
+ 
+        try:
+            image = soup.select_one('div[id = "gallery_plan"] img').get('data-src')
+        except:
+            image = ''
         
         phone = soup.select("a[class = 'detail-jk-preview__phone comagic_phone']")[0].text.strip()
+        
+        try:
+            coords = soup.select("div[data-center]")[0].get('data-center').split(',')
+        except:
+            print(url)
+            coords = ['', '']
 
         dict_values['description'] = description
         dict_values['total_price'] = total_price
         dict_values['price_meter'] = price_meter + price_wrap
         dict_values['phone'] = phone
-        dict_values['scrape_date']  =  self.date,
+        dict_values['image'] = image
+        dict_values['latitude'] = coords[0]
+        dict_values['longitude'] = coords[1]
+        dict_values['scrape_date']  =  self.date
         
         initial_items.update(dict_values)
         
@@ -141,8 +177,7 @@ class Scraper:
 
 def main():
     print('Go')
-    session = cloudscraper.create_scraper()
-    scraper = Scraper(session)
+    scraper = Scraper()
     processor = Processing()
     
     data = next(scraper.start_request())

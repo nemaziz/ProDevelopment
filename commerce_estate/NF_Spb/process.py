@@ -20,11 +20,14 @@ class Processing:
     def update_data(self, new_data):
         try:
             sales = pd.read_excel(path_sales)
-            supply = pd.read_excel(path_supply)
         except:
             self.write_data(pd.DataFrame(columns=list(new_data.columns) + ['Дата закрытия']), path_sales)
-            self.write_data(pd.DataFrame(columns=new_data.columns), path_supply)
             sales = pd.read_excel(path_sales)
+        
+        try:
+            supply = pd.read_excel(path_supply)
+        except:
+            self.write_data(pd.DataFrame(columns=new_data.columns), path_supply)
             supply = pd.read_excel(path_supply)
         
         new_supply = new_data[~new_data['url'].isin(supply['url'])]

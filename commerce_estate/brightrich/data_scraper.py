@@ -60,7 +60,6 @@ class Scraper:
                             }
                     initial_data.update(self.collect_offer(url))
                     data.append(initial_data)
-                    time.sleep(5)
                     
                 if not offers:
                     url = offer.get('href')
@@ -73,6 +72,8 @@ class Scraper:
                     
                     initial_data.update(self.collect_offer(building))
                     data.append(initial_data)
+                    
+                time.sleep(3)
                     
             print("На странице {} собрано {} объявлений".format(page, len(urls)))
             page += 1
@@ -137,6 +138,8 @@ def main():
     new_data = pd.DataFrame(data)
     new_data['Дата_сбора'] =  f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
     print(f'Всего собрано {new_data.shape[0]} объявлений')
+    #print(new_data)
+    
     processor.update_data(new_data)
     print('End')
     

@@ -12,7 +12,6 @@ id_user = "b22505e2-aedd-48ee-bce9-993aea300a6b"
 client = Client(id_user)
 RADIUS = 500
 
-
 path = """O:\\Nematov\\Web_scraping\\ProDevelopment\\commerce_estate\\brightrich"""
 
 path_sales = '{}\\data\\Sales.xlsx'.format(path)
@@ -26,7 +25,7 @@ class Processing:
         pass
     
     def write_data(self, data, path):
-        data.reset_index(drop=True).to_excel(f'{path}', index = False)
+        data.drop_duplicates().reset_index(drop=True).to_excel(f'{path}', index = False)
     
     def update_data(self, new_data):
         try:
@@ -38,7 +37,7 @@ class Processing:
             sales = pd.read_excel(path_sales)
             supply = pd.read_excel(path_supply)
         
-        new_supply = new_data[~new_data['Ccылка'].isin(supply['Ссылка'])]
+        new_supply = new_data[~new_data['Ссылка'].isin(supply['Ссылка'])]
         sold_supply = supply[~supply['Ссылка'].isin(new_data['Ссылка'])]
         remaining_supply = supply[supply['Ссылка'].isin(new_data['Ссылка'])]
             
@@ -56,4 +55,6 @@ class Processing:
             
             save_supply = pd.concat([remaining_supply, new_supply])
             self.write_data(save_supply, path_supply)
-
+        
+        print(f'Продано {len(sold_supply)}\nНовых складов {len(new_supply)}')
+            
