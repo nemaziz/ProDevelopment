@@ -1,6 +1,11 @@
 import pandas as pd
 from datetime import datetime 
 
+from yandex_geocoder import Client
+
+id_user = "b22505e2-aedd-48ee-bce9-993aea300a6b"
+client = Client(id_user)
+RADIUS = 500
 
 path = """O:\\Nematov\\Web_scraping\\ProDevelopment\\commerce_estate\\NF_Spb"""
 
@@ -35,6 +40,16 @@ class Processing:
         remaining_supply = supply[supply['url'].isin(new_data['url'])]
             
         if not new_supply.empty:
+            coords = []
+            for address in list(new_supply['Адрес']):
+                try:
+                    coords.append(float(client.coordinates(address)))
+                except:
+                    print('Проблема с координатами', address, list(new_supply['url'])[address])
+                                               
+            new_supply['latitude'] = [a[0] for a in coords]
+            new_supply['longitude'] = [a[1] for a in coords]
+            
             save_supply = pd.concat([remaining_supply, new_supply])
             self.write_data(save_supply, path_supply)
         

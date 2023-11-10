@@ -53,6 +53,7 @@ class Scraper:
                 print(f'Для сегмента {segment} и страницы {1} собрано {len(urls)} предложений')
 
             else:
+                print(last_page)
                 for page in range(1, int(last_page) + 1):
                     url_segment = segment + f'?&page={page}#listing'
                     urls = self.LinksCollector.collect_links(url_segment)
@@ -181,10 +182,10 @@ def main():
     processor = Processing()
     
     data = next(scraper.start_request())
-
+ 
     new_data = pd.DataFrame(data)
     print(f'Всего собрано {new_data.shape[0]} объявлений')
-    processor.update_data(new_data)
+    #processor.update_data(new_data)
     print('End')
     
 if __name__ == "__main__":
