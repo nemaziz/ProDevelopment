@@ -50,8 +50,9 @@ class Scraper:
                 ]
             
             office_data += local
+            print(page, len(local))
             
-        yield office_data
+        return office_data
 
 
 def main():
@@ -59,7 +60,7 @@ def main():
     scraper = Scraper()
     processor = Processing()
     
-    data = next(scraper.start_request())
+    data = scraper.start_request()
     new_data = pd.DataFrame(data)
     
     processor.update_data(new_data)
