@@ -42,6 +42,7 @@ class Scraper:
     
     def start_request(self):
         data = []
+        #segments = ['https://kf.expert/spb/office/prodazha']
         for segment in segments:
             last_page = self.max_page(segment)
             
@@ -65,7 +66,14 @@ class Scraper:
     
     
     def collect_offer(self, url):    
-        resp = self.session.get(url = url)
+        try:
+            resp = self.session.get(url = url)
+        except:
+            print('Проблема с ссылкой', url)
+            return {
+                "Ссылка" : url
+                }
+        
         text = resp.text
         try:
             soup = BeautifulSoup(text, 'lxml')
@@ -118,7 +126,7 @@ class Scraper:
                   'Предложений в аренду' : 'offer_rent_cnt',
                   'Эксклюзивный объект' : 'exclusive',
                   'Доход' : 'income'
-                    }
+                  }
 
         dict_values = {}
 
@@ -172,7 +180,6 @@ class Scraper:
         dict_values['scrape_date']  =  self.date
         
         initial_items.update(dict_values)
-        
         return initial_items
 
 
@@ -185,11 +192,14 @@ def main():
  
     new_data = pd.DataFrame(data)
     print(f'Всего собрано {new_data.shape[0]} объявлений')
-    #processor.update_data(new_data)
+    processor.update_data(new_data)
     print('End')
     
 if __name__ == "__main__":
    main()
    
+#scraper = Scraper()
+#url = 'https://kf.expert/spb/office/pomeschenie/optima-ol47180'
 
-    
+#d = scraper.collect_offer(url)
+#print(d)

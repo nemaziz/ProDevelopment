@@ -41,24 +41,24 @@ class Processing:
             
         if not new_supply.empty:
             coords = []
-            for address in list(new_supply['Адрес']):
+            for address in list(new_supply['address']):
                 try:
                     coords.append(float(client.coordinates(address)))
                 except:
-                    print('Проблема с координатами', address, list(new_supply['url'])[address])
+                    coords.append(['', ''])
                                                
-            new_supply['latitude'] = [a[0] for a in coords]
-            new_supply['longitude'] = [a[1] for a in coords]
+            new_supply.loc[:, ('latitude')] = [a[0] for a in coords]
+            new_supply.loc[:, ('longitude')] = [a[1] for a in coords]
             
             save_supply = pd.concat([remaining_supply, new_supply])
-            self.write_data(save_supply, path_supply)
+            #self.write_data(save_supply, path_supply)
         
         if not sold_supply.empty:
-            sold_supply['Дата закрытия'] = date
+            sold_supply.loc[:, ('Дата закрытия')] = date
             
             save_sales = pd.concat([sales, sold_supply])
-            self.write_data(save_sales, path_sales)
+            #self.write_data(save_sales, path_sales)
             
             save_supply = pd.concat([remaining_supply, new_supply])
-            self.write_data(save_supply, path_supply)
+            #self.write_data(save_supply, path_supply)
 

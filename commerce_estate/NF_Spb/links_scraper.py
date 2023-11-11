@@ -26,7 +26,11 @@ class LinksCollector:
             }
         )
     
-        response = self.session.get(url = url, headers=headers)
+        try:
+            response = self.session.get(url = url, headers=headers)
+        except:
+            print('Проблема с ссылкой', url)
+            return None
         response.raise_for_status()
         text = response.text
         try:
