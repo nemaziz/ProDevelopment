@@ -1,6 +1,10 @@
 import requests as rq
 
 class Headers_NF:
+    
+    def __init__(self) -> None:
+        pass
+    
     def parse_header(self, raw_header: str):
         header = dict()
         for line in raw_header.split("\n"):
