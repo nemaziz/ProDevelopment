@@ -26,7 +26,7 @@ class Scraper:
             data = resp(url, source, page)
             
             if data == []:
-                print('stop')
+                print('Страницы кончились')
                 break
             
             local = [
@@ -57,7 +57,7 @@ class Scraper:
                 }
                 for obj in data 
             ]
-            print(page, len(local))
+            #print(page, len(local))
             flats_v += local
             page += 1
             
@@ -102,7 +102,7 @@ class Scraper:
 
 
 def main():
-    print('Go')
+    print('Парсинг начался')
     scraper = Scraper()
     processor = Processing()
     
@@ -110,12 +110,12 @@ def main():
     new_offers = pd.DataFrame(offers)
     new_offers['ЖК'] = new_offers['ЖК'].str.replace(' [\d] оч. .*', '')
     processor.update_data(new_offers, path_sales, path_supply)
+    print("Данные объявлений обновлены")
     
     houses = scraper.collect_house()
     new_house = pd.DataFrame(houses)
-    print('update')
     processor.update_house(new_house, path_house)
-    print('End')
+    print('Парсинг закончился')
     
     
 if __name__ == "__main__":

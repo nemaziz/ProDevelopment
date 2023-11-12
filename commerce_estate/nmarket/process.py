@@ -3,6 +3,7 @@ from datetime import datetime
 import pandas as pd
 
 from headers import *
+from get_keys import Keys_class
 
 # path = """O:\\Отдел стратегического развития\\Исследовательская работа\\Анализ рынков недвижимости\\Анализ апартаментов\\Статистические данные\\nmarket"""
 # path_sales = f'{path}\\Продажи_nmarket.xlsx'
@@ -17,7 +18,7 @@ date = f'{datetime.now().day}/{datetime.now().month}/{datetime.now().year}'
 class Processing:
     
     def __init__(self) -> None:
-        pass
+        keys_engine = Keys_class()
     
     def write_data(self, data, path):
         data.reset_index(drop=True).to_excel(f'{path}', index = False)
@@ -36,7 +37,6 @@ class Processing:
         sold_supply = supply[~supply['Ссылка'].isin(new_data['Ссылка'])]
         remaining_supply = supply[supply['Ссылка'].isin(new_data['Ссылка'])]
         
-        print('starting')
         print(len(new_supply), len(sold_supply))
         
         if not new_supply.empty:
@@ -65,7 +65,7 @@ class Processing:
             self.write_data(save_sales, path_sales)
             
             save_supply = pd.concat([remaining_supply, new_supply])
-            self.write_data(save_supply, path_supply)
+            self.write_data(save_supply, path_supply)        
     
     def update_house(self, new_data, path_house):
         try:
