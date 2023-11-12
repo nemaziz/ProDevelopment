@@ -16,7 +16,6 @@ segments = [
 ]
 
 class Scraper:
-    
     def __init__(self) -> None:
         self.session = cloudscraper.create_scraper()
         self.LinksCollector = LinksCollector()
@@ -96,7 +95,7 @@ class Scraper:
                   'Электроснабжение' : 'electricity_on',
                   'Планировка' : 'layout',
                   'В стоимость включено' : 'price_includes',
-                  'Электричество' : 'electricity',
+                  'Электричество'  : 'electricity',
                   'Площадь в продажу': 'area_sale',
                   'Площадь блока' : 'area_sale2',
                   'Площадь в аренду' : 'area_sale3',

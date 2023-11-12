@@ -51,14 +51,14 @@ class Processing:
             new_supply.loc[:, ('longitude')] = [a[1] for a in coords]
             
             save_supply = pd.concat([remaining_supply, new_supply])
-            #self.write_data(save_supply, path_supply)
+            self.write_data(save_supply, path_supply)
         
         if not sold_supply.empty:
             sold_supply.loc[:, ('Дата закрытия')] = date
             
             save_sales = pd.concat([sales, sold_supply])
-            #self.write_data(save_sales, path_sales)
+            self.write_data(save_sales, path_sales)
             
             save_supply = pd.concat([remaining_supply, new_supply])
-            #self.write_data(save_supply, path_supply)
+            self.write_data(save_supply, path_supply)
 
