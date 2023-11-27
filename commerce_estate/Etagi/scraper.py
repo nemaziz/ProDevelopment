@@ -40,12 +40,12 @@ class Scraper:
                 local = [
                      {
                         'id' : obj['object_id'],
-                        "url": f"https://spb.etagi.com/realty/{obj['object_id']}",
+                        "url": f"https://spb.etagi.com/commerce/{obj['object_id']}",
                         'name' : obj['class'],
                         'type' : obj['type'],
                         'action_sl' : obj['action_sl'],
                         'address' : process_location(obj['meta'], obj['house_num']),
-                         'district' : obj['meta']['district'],
+                        'district' : obj['meta']['district'],
                         'city' : obj['meta']['city'],
                         'latitude' : obj['la'],
                         'longitude' : obj['lo'],
