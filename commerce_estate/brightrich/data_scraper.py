@@ -49,7 +49,6 @@ class Scraper:
                     
                 name = soup1.select_one('h1').text
                 
-                
                 for offer in offers:
                     url = offer.get('href')
                     
@@ -62,7 +61,7 @@ class Scraper:
                     data.append(initial_data)
                     
                 if not offers:
-                    url = offer.get('href')
+                    url = building #offer.get('href')
 
                     initial_data = {
                         'Ссылка' : url,
@@ -79,7 +78,6 @@ class Scraper:
             page += 1
             
         return data
-    
     
     def collect_offer(self, url):
         offer = self.getsoup(url)
@@ -136,7 +134,7 @@ def main():
     data = scraper.start_request()
 
     new_data = pd.DataFrame(data)
-    new_data['Дата_сбора'] =  f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
+    new_data.loc[:, 'Дата_сбора'] =  f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
     print(f'Всего собрано {new_data.shape[0]} объявлений')
     #print(new_data)
     

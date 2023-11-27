@@ -58,7 +58,7 @@ class Scraper:
                 }
                 for obj in data if (type(obj['floors']) == int and obj['floors'] < 6) or (int(obj['houseFloorName']) < 6)
             ]
-            print(page, len(local))
+            #print(page, len(local))
             flats_v += local
             page += 1
             

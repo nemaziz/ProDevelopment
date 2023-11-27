@@ -74,7 +74,7 @@ class Scraper:
             data = resp(url, source, page, hs = True)
             
             if data == []:
-                print('End data')
+                print('Парсинг страниц ЖК закончился')
                 break
             
             local = [
@@ -94,7 +94,7 @@ class Scraper:
                 for obj in data
             ]
                 
-            print('house', page, len(local))
+            #print('house', page, len(local))
             house_nc += local
             page += 1
         
