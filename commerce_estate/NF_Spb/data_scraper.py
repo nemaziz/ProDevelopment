@@ -5,8 +5,11 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import cloudscraper
 
+from process_nf import Processing
 from links_scraper import LinksCollector
-from process import Processing
+
+import re
+import requests as rq
 
 segments = [
     'https://kf.expert/spb/office/prodazha',
@@ -20,9 +23,13 @@ class Scraper:
         self.session = cloudscraper.create_scraper()
         self.LinksCollector = LinksCollector()
         self.date = f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
+        self.headers = rq.utils.default_headers()
+
     
     def getsoup(self, url):
-        response = self.session.get(url = url)
+        self.headers.update({'User-Agent': 'My User Agent 1.0',})
+        
+        response = self.session.get(url = url, headers=self.headers)
         response.raise_for_status()
         text = response.text
         try:
@@ -64,28 +71,15 @@ class Scraper:
         yield data 
     
     
-    def collect_offer(self, url):    
-        try:
-            resp = self.session.get(url = url)
-        except:
-            print('Проблема с ссылкой', url)
-            return {
-                "Ссылка" : url
-                }
-        
-        text = resp.text
-        try:
-            soup = BeautifulSoup(text, 'lxml')
-        except:
-            soup = BeautifulSoup(text, 'html.parser')
-        
+    def collect_offer(self, url): 
+        soup = self.getsoup(url)
         initial_items = {
             'id' : soup.select("span[class *= 'detail-jk-header__id']")[0].text.strip(),
             'url' : url,
             'name' : soup.select("h1[class = 'detail-jk__main-title']")[0].text
         }
 
-        dict_items = {
+        self.dict_items = {
                   'Тип здания': 'type_building',
                   'Тип сделки': 'type_deal',
                   'Стадия строительства': 'stage_construction',
@@ -131,10 +125,10 @@ class Scraper:
 
         parametrs =  [a.text.strip() for a in soup.select("div[class = 'characteristic__item-title']")] 
         values = [a.text.replace('\xa0', '').strip() for a in soup.select("div[class = 'characteristic__item-text']")]
-
+        
         for old_key, value in zip(parametrs, values):
-                if old_key in dict_items:
-                    key = dict_items[old_key]
+                if old_key in self.dict_items:
+                    key = self.dict_items[old_key]
                     dict_values[key] = value
                 else:
                     dict_values[old_key] = value
@@ -168,10 +162,38 @@ class Scraper:
         except:
             print(url)
             coords = ['', '']
+            
+        if "запросу" in total_price or pd.isna(total_price):
+            total_price = pd.NA
+            price_meter = pd.NA
+        else:
+            try:
+                total_price = int(total_price)
+            except:
+                print('total',url, total_price)
+                total_price = int(re.findall(r'([\d]+)', str(total_price))[0])
+                
+            if dict_values['type_deal'] == 'Продажа':
+                price_meter = int(re.findall(r'([\d]+)', price_meter)[0])
+                
+                if price_meter > total_price:
+                    total_price, price_meter = price_meter, total_price
+                else:
+                    print(url, price_meter, total_price)
+            else:
+                try:
+                    price_meter = int(re.findall(r'([\d]+)', str(price_meter))[0])
+                    if price_meter > total_price: 
+                        total_price, price_meter = price_meter, total_price//12
+                except:
+                    print('metr', url, price_meter)
+                    price_meter = pd.NA
+                    total_price = pd.NA
+                    
 
         dict_values['description'] = description
         dict_values['total_price'] = total_price
-        dict_values['price_meter'] = price_meter + price_wrap
+        dict_values['price_meter'] = price_meter
         dict_values['phone'] = phone
         dict_values['image'] = image
         dict_values['latitude'] = coords[0]
@@ -191,7 +213,7 @@ def main():
  
     new_data = pd.DataFrame(data)
     print(f'Всего собрано {new_data.shape[0]} объявлений')
-    processor.update_data(new_data)
+    processor.update_data(new_data, scraper.dict_items)
     print('End')
     
 if __name__ == "__main__":
