@@ -15,7 +15,6 @@ path_house = '{}\\ЖК.xlsx'.format(path)
 
 
 class Scraper:
-    
     def __init__(self) -> None:
         self.date = f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
         

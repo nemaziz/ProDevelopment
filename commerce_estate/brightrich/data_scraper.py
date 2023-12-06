@@ -13,7 +13,7 @@ class Scraper:
     def __init__(self) -> None:
         self.session = cloudscraper.create_scraper()
         
-    def getsoup(self, url):
+    def getsoup(self, url): 
         response = self.session.get(url = url)
         response.raise_for_status() 
         text = response.text
