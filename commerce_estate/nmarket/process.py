@@ -77,14 +77,14 @@ class Processing:
         supp_new = new_data[~new_data['Ссылка'].isin(old_jk['Ссылка'])]
         
         if not supp_new.empty:
-            new_data = new_data['Ссылка'].apply(jk_data)
+            new_data = supp_new['Ссылка'].apply(jk_data)
             
             supp_new = supp_new.join(
                 pd.DataFrame(
                     {
                         'latitude' : [a['mapPoints'][0]['latitude'] for a in new_data],
                         'longitude' : [a['mapPoints'][0]['longitude'] for a in new_data],
-                        'Достоинства' :  ';'.join(a['advantages'] for a in new_data)
+                        'Достоинства' :  [ b['advantages'] for b in new_data]
                     },
                     index = supp_new.index
                 )
