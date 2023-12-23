@@ -76,7 +76,7 @@ def main():
     houses = pd.read_excel(path_house)
     new_offers = new_offers.loc[new_offers['ЖК'].isin(houses['Имя'])].reset_index(drop = True)
     print('update')
-    processor.update_data(new_offers, 
+    processor.update_data(new_offers,
                           path_sales,
                           path_supply)
     print('End')

@@ -106,11 +106,11 @@ def main():
     scraper = Scraper()
     processor = Processing()
     
-    # offers = scraper.collect_offers()
-    # new_offers = pd.DataFrame(offers)
-    # new_offers['ЖК'] = new_offers['ЖК'].str.replace(' [\d] оч. .*', '')
-    # processor.update_data(new_offers, path_sales, path_supply)
-    # print("Данные объявлений обновлены")
+    offers = scraper.collect_offers()
+    new_offers = pd.DataFrame(offers)
+    new_offers['ЖК'] = new_offers['ЖК'].str.replace(' [\d] оч. .*', '')
+    processor.update_data(new_offers, path_sales, path_supply)
+    print("Данные объявлений обновлены")
     
     houses = scraper.collect_house()
     new_house = pd.DataFrame(houses)
