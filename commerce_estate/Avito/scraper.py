@@ -22,11 +22,16 @@ class Scraper:
     
     Атрибуты:
         session: webdriver из selenium
-        pages: последняя страница
+        pages: номер последней страницы с объявлениями
         
     Методы:
         get_pages: находит номер последней страницы
         get_soup: получает объект bs4
+        get_metro, get_description: нахождение информации о метро и описании соответственно
+        get_room_attributes: собирает информацию из раздела 'О Помещении'
+        get_building_attributes: собирает информацию из раздела "О здании'
+        get_picture: собирает ссылку первой картинки в объявлении
+        start_scraper: запуск парсера по всем страницам
     """
     
     def __init__(self) -> None:
@@ -35,16 +40,16 @@ class Scraper:
         
     
     def get_pages(self) -> None:
-        """Функция для нахождения последней страницы.
+        """Функция для нахождения номера последней страницы с объявлениями.
         
-        Присваивает атрибуту pages номер последней страницы.
+        Возвращает число.
         """
                 
         soup = self.get_soup(base_url(1))
         last_page = soup.select("span[class = 'styles-module-text-InivV']")
         return last_page[-1].text
     
-    def get_soup(self, link):
+    def get_soup(self, link:str) -> BeautifulSoup:
         """Функция для получения объекта BeautifulSoup страницы объявления
         
         Аргументы:
@@ -63,7 +68,7 @@ class Scraper:
             soup = BeautifulSoup(page_source, 'html.parser')
         return soup
     
-    def get_metro(self, soup):
+    def get_metro(self, soup:BeautifulSoup):
         
         icon_metro = soup.select("span[class = 'geo-icons-uMILt']")
         
@@ -72,7 +77,7 @@ class Scraper:
             return metro.text.strip()
         return 'Нет метро'
             
-    def get_description(self, soup):
+    def get_description(self, soup:BeautifulSoup):
         """Собирает описание из объявления
 
         Аргумент:
@@ -85,7 +90,7 @@ class Scraper:
         address = soup.select("div[itemprop = 'description']").text.strip()
         return address
     
-    def get_room_attributes(self, soup):
+    def get_room_attributes(self, soup:BeautifulSoup):
         """Собираем характеристики из отдела 'О помещении'
 
         Аргументы:
@@ -101,7 +106,7 @@ class Scraper:
         
         return result
     
-    def get_building_attributes(self, soup):
+    def get_building_attributes(self, soup:BeautifulSoup):
         """Собираем характеристики из отдела 'О здании'
 
         Args:
@@ -117,7 +122,7 @@ class Scraper:
         
         return result
     
-    def get_picture(self, soup) -> SyntaxError:
+    def get_picture(self, soup:BeautifulSoup) -> str:
         """Собирает ссылку на 1 картинку в объявлении
 
         Аргумент:
@@ -144,7 +149,8 @@ class Scraper:
                 'price' : [],
                 'pricem2' : [],
                 'address': [],
-                'metro': []}
+                'metro': [], 
+                'picture': []}
         
         for page in range(1, 2):
             url = base_url(page)
@@ -154,7 +160,7 @@ class Scraper:
             links =  ['https://www.avito.ru' + a.select_one("a[data-marker='item-title']").get('href') for a in objects]
             
             for link in links[:10]:
-                data['url'].append(link)
+                
                 soup = self.get_soup(link)
                 
                 room_attrs = self.get_room_attributes(soup)
@@ -172,7 +178,7 @@ class Scraper:
                         data[key] = ['' for i in range(len(data['url']))] + [value]
                     else:
                         data[key] += value
-                
+                data['url'].append(link)
                 time.sleep(3)
             
             data['name'] += [a.select_one("h3[itemprop='name']").text for a in objects]
@@ -180,6 +186,7 @@ class Scraper:
             data['pricem2'] += [a.select("span[class^='price-root'] p")[-1].get_text(strip=True).replace('\xa0', '') for a in objects]
             data['address'] += [a.select_one("div[data-marker='item-address']").select_one('p').text for a in objects]
             data['metro'] += [self.get_metro(a) for a in objects]
+            data['picture'] += [self.get_picture(a) for a in objects]
             
         
         return data
@@ -198,4 +205,4 @@ print(scraper.get_room_attributes(link))
 print(scraper.get_building_attributes(link))
 print(scraper.get_picture(link))
 
-print(scraper.start_scraper())
+# print(scraper.start_scraper())
