@@ -7,6 +7,8 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 
+from meta_data import *
+
 # & o:/Nematov/Web_scraping/ProDevelopment/.venv/Scripts/python.exe o:/Nematov/Web_scraping/ProDevelopment/commerce_estate/Avito/scraper.py
 
 service = Service(executable_path="O:/Nematov/Web_scraping/chromedriver.exe")
@@ -53,7 +55,7 @@ class Scraper:
         """Функция для получения объекта BeautifulSoup страницы объявления
         
         Аргументы:
-            @link (str): Адрес объявления
+            link (str): Адрес сайта
 
         Результат:
             объект BeautifulSoup
@@ -68,16 +70,18 @@ class Scraper:
             soup = BeautifulSoup(page_source, 'html.parser')
         return soup
     
-    def get_metro(self, soup:BeautifulSoup):
+    def get_metro(self, soup:BeautifulSoup) -> str:
         
-        icon_metro = soup.select("span[class = 'geo-icons-uMILt']")
+        icon_metro = soup.select("span[class ^= 'geo-icons']")
         
         if icon_metro:
-            metro = soup.select_one("div[data-marker='item-address']").find('span', attrs={ 'class' : None} )
-            return metro.text.strip()
+            metro = soup.select_one("div[data-marker='item-address']").find('span', attrs={ 'class' : None} ).text.strip()
+            print(metro)
+            assert metro in metro_spb, metro
+            return metro
         return 'Нет метро'
             
-    def get_description(self, soup:BeautifulSoup):
+    def get_description(self, soup:BeautifulSoup) -> str:
         """Собирает описание из объявления
 
         Аргумент:
@@ -90,13 +94,13 @@ class Scraper:
         address = soup.select("div[itemprop = 'description']").text.strip()
         return address
     
-    def get_room_attributes(self, soup:BeautifulSoup):
+    def get_room_attributes(self, soup:BeautifulSoup) -> dict:
         """Собираем характеристики из отдела 'О помещении'
 
         Аргументы:
             soup (bs4): объект bs4
             
-        Результат:
+        Результат: 
             dict: словарь с структурой: {признак: значений}
         """
         
@@ -106,7 +110,7 @@ class Scraper:
         
         return result
     
-    def get_building_attributes(self, soup:BeautifulSoup):
+    def get_building_attributes(self, soup:BeautifulSoup) -> dict:
         """Собираем характеристики из отдела 'О здании'
 
         Args:
@@ -123,7 +127,7 @@ class Scraper:
         return result
     
     def get_picture(self, soup:BeautifulSoup) -> str:
-        """Собирает ссылку на 1 картинку в объявлении
+        """Собирает ссылку на первую картинку помещения в объявлении
 
         Аргумент:
             soup (_type_): объект bs4 
@@ -137,12 +141,6 @@ class Scraper:
         return image
     
     def start_scraper(self) -> None:
-        
-        
-        # url = base_url(1)
-        # soup = self.get_soup(url)
-        # objects = soup.select("div[data-marker='item']")
-        
         
         data = {'url' : [],
                 'name' : [],
@@ -158,13 +156,12 @@ class Scraper:
             objects = soup.select("div[data-marker='item']")
             
             links =  ['https://www.avito.ru' + a.select_one("a[data-marker='item-title']").get('href') for a in objects]
-            
+            data['metro'] += [self.get_metro(a) for a in objects]
             for link in links[:10]:
                 
                 soup = self.get_soup(link)
-                
+
                 room_attrs = self.get_room_attributes(soup)
-                print(link, 'roomm', room_attrs)
                 for key, value in room_attrs.items():
                     if key not in data:
                         data[key] = ['' for i in range(len(data['url']))] + [value]
@@ -185,7 +182,6 @@ class Scraper:
             data['price'] += [a.select_one("meta[itemprop='price']").get('content') for a in objects]
             data['pricem2'] += [a.select("span[class^='price-root'] p")[-1].get_text(strip=True).replace('\xa0', '') for a in objects]
             data['address'] += [a.select_one("div[data-marker='item-address']").select_one('p').text for a in objects]
-            data['metro'] += [self.get_metro(a) for a in objects]
             data['picture'] += [self.get_picture(a) for a in objects]
             
         
@@ -201,8 +197,8 @@ url, square, price_m2, segment, type_build, type_deal, address, district, latitu
 scraper = Scraper()
 link = scraper.get_soup('https://www.avito.ru/sankt-peterburg/kommercheskaya_nedvizhimost/pomeschenie_svobodnogo_naznacheniya_58_m2._2_etazh_s_o_2387511314')
 
-print(scraper.get_room_attributes(link))
-print(scraper.get_building_attributes(link))
-print(scraper.get_picture(link))
+# print(scraper.get_room_attributes(link))
+# print(scraper.get_building_attributes(link))
+# print(scraper.get_metro(link))
 
-# print(scraper.start_scraper())
+print(scraper.start_scraper())
