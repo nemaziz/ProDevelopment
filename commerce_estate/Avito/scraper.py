@@ -8,6 +8,7 @@ from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 
 from meta_data import *
+from process import Processing
 
 # & o:/Nematov/Web_scraping/ProDevelopment/.venv/Scripts/python.exe o:/Nematov/Web_scraping/ProDevelopment/commerce_estate/Avito/scraper.py
 
@@ -41,7 +42,7 @@ class Scraper:
         self.pages = self.get_pages()
         
     
-    def get_pages(self) -> None:
+    def get_pages(self) -> str:
         """Функция для нахождения номера последней страницы с объявлениями.
         
         Возвращает число.
@@ -77,7 +78,7 @@ class Scraper:
         if icon_metro:
             metro = soup.select_one("div[data-marker='item-address']").find('span', attrs={ 'class' : None} ).text.strip()
             print(metro)
-            assert metro in metro_spb, metro
+            # assert metro in metro_spb, metro
             return metro
         return 'Нет метро'
             
@@ -121,6 +122,7 @@ class Scraper:
         """
         
         characters = [a.text.replace(u'\xa0', '') for a in soup.select("li[class = 'style-item-params-list-item-aXXql']")]
+        print('build', characters)
         result = {a.split(':')[0] : a.split(':')[1]
                   for a in characters}
         
@@ -156,8 +158,8 @@ class Scraper:
             objects = soup.select("div[data-marker='item']")
             
             links =  ['https://www.avito.ru' + a.select_one("a[data-marker='item-title']").get('href') for a in objects]
-            data['metro'] += [self.get_metro(a) for a in objects]
-            for link in links[:10]:
+            # data['metro'] += [self.get_metro(a) for a in objects]
+            for link in links[:3]:
                 
                 soup = self.get_soup(link)
 
@@ -167,28 +169,31 @@ class Scraper:
                         data[key] = ['' for i in range(len(data['url']))] + [value]
                     else:
                         data[key] += value
-                
+                print('1', data)
                 build_attrs = self.get_building_attributes(soup)
-                print(link, 'blds', build_attrs)
+                
                 for key, value in build_attrs.items():
                     if key not in data:
                         data[key] = ['' for i in range(len(data['url']))] + [value]
                     else:
                         data[key] += value
                 data['url'].append(link)
+                print('2', data)
                 time.sleep(3)
             
-            data['name'] += [a.select_one("h3[itemprop='name']").text for a in objects]
-            data['price'] += [a.select_one("meta[itemprop='price']").get('content') for a in objects]
-            data['pricem2'] += [a.select("span[class^='price-root'] p")[-1].get_text(strip=True).replace('\xa0', '') for a in objects]
-            data['address'] += [a.select_one("div[data-marker='item-address']").select_one('p').text for a in objects]
-            data['picture'] += [self.get_picture(a) for a in objects]
-            
+            # data['name'] += [a.select_one("h3[itemprop='name']").text for a in objects]
+            # data['price'] += [a.select_one("meta[itemprop='price']").get('content') for a in objects]
+            # data['pricem2'] += [a.select("span[class^='price-root'] p")[-1].get_text(strip=True).replace('\xa0', '') for a in objects]
+            # data['address'] += [a.select_one("div[data-marker='item-address']").select_one('p').text for a in objects]
+            # data['picture'] += [self.get_picture(a) for a in objects]
         
-        return data
         # print(len(links))
         # print(links[0], names[0], price[0], pricem2[0], address[0], metro[0])
         # print(links[-1], names[-1], price[-1], pricem2[-1], address[-1], metro[-1])
+            
+        
+        return data
+
         
 """какие характеристики нужны
 url, square, price_m2, segment, type_build, type_deal, address, district, latitude, tongitude, image, description, 
@@ -197,8 +202,13 @@ url, square, price_m2, segment, type_build, type_deal, address, district, latitu
 scraper = Scraper()
 link = scraper.get_soup('https://www.avito.ru/sankt-peterburg/kommercheskaya_nedvizhimost/pomeschenie_svobodnogo_naznacheniya_58_m2._2_etazh_s_o_2387511314')
 
+processor = Processing()
+
+data = scraper.start_scraper()
+
+path = fr'O:\Nematov\Web_scraping\ProDevelopment\commerce_estate\Avito\data'
+processor.write_data(pd.DataFrame(data), f'{path}\data.xlsx')
+
 # print(scraper.get_room_attributes(link))
 # print(scraper.get_building_attributes(link))
 # print(scraper.get_metro(link))
-
-print(scraper.start_scraper())

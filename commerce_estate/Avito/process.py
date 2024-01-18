@@ -6,9 +6,6 @@ date = f'{datetime.now().day}/{datetime.now().month}/{datetime.now().year}'
 
 class Processing:
     
-    def __init__(self) -> None:
-        keys_engine = Keys_class()
-    
     def write_data(self, data, path):
         data.reset_index(drop=True).to_excel(f'{path}', index = False)
     
