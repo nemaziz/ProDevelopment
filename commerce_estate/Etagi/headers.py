@@ -22,7 +22,7 @@ class headers_etagi:
         Accept-Language:en-GB,en-US;q=0.9,en;q=0.8
         Content-Type:application/json; charset=utf-8
         Cookie:_ga_sync=wrokGmUsfMZUKwAIDfLaAg==; from_advertisement=false; visit_source=www.google.com; tmr_lvid=23d501c5fe0ba1b6c4f67a7eebb36a4e; tmr_lvidTS=1697414344398; _ym_uid=1697414344196302191; _ym_d=1697414344; emuuid=1b038b5f-da38-43fd-adf6-70a64d6a7f7e; olToken=a2f4992c-5224-4ebe-889b-e7b0dd80b31e; clbvid=652c7cc8d5e67b6d1ffc0d41; selected_city=spb; experimentUserID=0.6428574632204433; _gid=GA1.2.55422707.1698095112; _ym_isad=2; _ym_visorc=w; _ga=GA1.2.258751648.1697414344; tmr_detect=0%7C1698096179384; currentPageUrl=https%3A%2F%2Fspb.etagi.com%2Fcommerce%2F%3Fcity_id%5B%5D%3D1154%26city_id%5B%5D%3D1094%26city_id%5B%5D%3D2512%26city_id%5B%5D%3D2514%26city_id%5B%5D%3D242%26city_id%5B%5D%3D2028%26action_sl%3D{action}%26type%5B%5D%3Doffice%26type%5B%5D%3Dsklad%26type%5B%5D%3Dother%26type%5B%5D%3Dtorg%26type%5B%5D%3Ddev; _ga_34X0XLEBTX=GS1.1.1698094955.8.1.1698096536.0.0.0; _ga_YQCLPDPR4R=GS1.1.1698094955.8.1.1698096537.60.0.0; _gat_UA-54854319-18=1
-        Referer:https://spb.etagi.com/commerce/?city_id[]=1154&city_id[]=1094&city_id[]=2512&city_id[]=2514&city_id[]=242&city_id[]=2028&action_sl=lease&type[]=office&type[]=sklad&type[]=other&type[]=torg&type[]=dev
+        Referer:https://spb.etagi.com/commerce/?city_id[]=1154&city_id[]=1094&city_id[]=2512&city_id[]=2514&city_id[]=242&city_id[]=2028&action_sl={action}&type[]=office&type[]=sklad&type[]=other&type[]=torg&type[]=dev
         Sec-Ch-Ua:"Chromium";v="118", "Google Chrome";v="118", "Not=A?Brand";v="99"
         Sec-Ch-Ua-Mobile:?0
         Sec-Ch-Ua-Platform:"Windows"

@@ -15,7 +15,6 @@ path_house = '{}\\ЖК.xlsx'.format(path)
 
 
 class Scraper:
-    
     def __init__(self) -> None:
         self.date = f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
         
@@ -58,7 +57,7 @@ class Scraper:
                 }
                 for obj in data if (type(obj['floors']) == int and obj['floors'] < 6) or (int(obj['houseFloorName']) < 6)
             ]
-            print(page, len(local))
+            #print(page, len(local))
             flats_v += local
             page += 1
             
@@ -77,7 +76,7 @@ def main():
     houses = pd.read_excel(path_house)
     new_offers = new_offers.loc[new_offers['ЖК'].isin(houses['Имя'])].reset_index(drop = True)
     print('update')
-    processor.update_data(new_offers, 
+    processor.update_data(new_offers,
                           path_sales,
                           path_supply)
     print('End')

@@ -27,9 +27,8 @@ class LinksCollector:
         )
     
         response = self.session.get(url = url, headers=headers)
-
-        
         response.raise_for_status()
+        
         text = response.text
         try:
             soup = BeautifulSoup(text, 'lxml')

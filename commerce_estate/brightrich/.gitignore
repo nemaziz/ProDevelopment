@@ -5,3 +5,7 @@ Thumbs.db
 *__pycache__*
 *.pyc
 /venv/
+/data/
+
+/data/Sales.xlsx
+/data/Supply.xlsx

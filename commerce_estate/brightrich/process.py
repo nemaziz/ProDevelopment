@@ -29,8 +29,8 @@ class Processing:
     
     def update_data(self, new_data):
         try:
-            sales = pd.read_excel(path_sales)
-            supply = pd.read_excel(path_supply)
+            sales = pd.read_excel(path_sales).drop_duplicates(["Ссылка"], keep='first')
+            supply = pd.read_excel(path_supply).drop_duplicates(["Ссылка"], keep='first')
         except:
             self.write_data(pd.DataFrame(columns=list(new_data.columns) + ['Дата закрытия']), path_sales)
             self.write_data(pd.DataFrame(columns=new_data.columns), path_supply)

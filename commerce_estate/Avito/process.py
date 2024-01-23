@@ -2,23 +2,9 @@ import requests as rq
 from datetime import datetime
 import pandas as pd
 
-from headers import *
-from get_keys import Keys_class
-
-# path = """O:\\Отдел стратегического развития\\Исследовательская работа\\Анализ рынков недвижимости\\Анализ апартаментов\\Статистические данные\\nmarket"""
-# path_sales = f'{path}\\Продажи_nmarket.xlsx'
-# path_supply = f'{path}\\Предложение_nmarket.xlsx' 
-# path_house = f'{path}\\ЖК.xlsx' 
-
-
-
-
 date = f'{datetime.now().day}/{datetime.now().month}/{datetime.now().year}'
 
 class Processing:
-    
-    def __init__(self) -> None:
-        keys_engine = Keys_class()
     
     def write_data(self, data, path):
         data.reset_index(drop=True).to_excel(f'{path}', index = False)
