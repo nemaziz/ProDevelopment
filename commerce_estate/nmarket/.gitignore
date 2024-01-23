@@ -1,0 +1,18 @@
+# Ignore platform files
+Thumbs.db
+.DS_Store
+
+*__pycache__*
+*.pyc
+/venv/
+
+#login and pass
+passwords.txt
+
+/data/Apartments/house.xlsx
+/data/Apartments/Sales.xlsx
+/data/Apartments/Supply.xlsx
+
+/data/Luppolovo/Sales.xlsx
+/data/Luppolovo/Supply.xlsx
+/data/Luppolovo/ЖК.xlsx
