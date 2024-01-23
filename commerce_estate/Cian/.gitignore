@@ -1,0 +1,7 @@
+# Ignore platform files
+Thumbs.db
+.DS_Store
+
+*__pycache__*
+*.pyc
+/venv/
