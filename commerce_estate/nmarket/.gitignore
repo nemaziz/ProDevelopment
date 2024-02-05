@@ -9,10 +9,4 @@ Thumbs.db
 #login and pass
 passwords.txt
 
-/data/Apartments/house.xlsx
-/data/Apartments/Sales.xlsx
-/data/Apartments/Supply.xlsx
-
-/data/Luppolovo/Sales.xlsx
-/data/Luppolovo/Supply.xlsx
-/data/Luppolovo/ЖК.xlsx
+/data/

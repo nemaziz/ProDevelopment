@@ -5,7 +5,7 @@ path = """O:\\Nematov\\Web_scraping\\ProDevelopment\\commerce_estate\\Etagi"""
 
 path_sales = '{}\\data\\Sales.xlsx'.format(path)
 path_supply = '{}\\data\\Supply.xlsx'.format(path)
-date = f'{datetime.now().day}/{datetime.now().month}/{datetime.now().year}'
+date = f'{datetime.now().day}.{datetime.now().month}.{datetime.now().year}'
 
 class processing:
     def write_data(self, data, path):

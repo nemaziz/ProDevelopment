@@ -24,9 +24,9 @@ class Keys_class:
     def authentication(self):
         """Авторизация на сайте nmarket
         """
-        path = r'O:\\Nematov\\Web_scraping\\ProDevelopment\\commerce_estate\\nmarket\\'
+        path = fr'O:\Nematov\Web_scraping\ProDevelopment\commerce_estate\nmarket'
 
-        with open(fr'{path}passwords.txt', 'r') as f:
+        with open(fr'{path}\passwords.txt', 'r') as f:
             login_pass = f.readline().strip()
             pass_pass = f.readline().strip()
     
@@ -105,7 +105,7 @@ class Keys_class:
         self.browser.quit()
         
 
-
+key = Keys_class()
 # print(key.offers_get_key())
 # print(key.pers_get_key('3991855'))
 # print(key.house_get_key('77597'))

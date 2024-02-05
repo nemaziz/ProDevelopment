@@ -14,7 +14,7 @@ path_house =  '{}\\house.xlsx'.format(path)
 class Scraper:
     
     def __init__(self) -> None:
-        self.date = f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
+        self.date = f'{datetime.now().day}.{datetime.now().month}.{datetime.now().year}'
         
     def collect_offers(self):
         flats_v = []

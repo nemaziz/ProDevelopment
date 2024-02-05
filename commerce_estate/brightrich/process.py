@@ -17,7 +17,7 @@ path = """O:\\Nematov\\Web_scraping\\ProDevelopment\\commerce_estate\\brightrich
 path_sales = '{}\\data\\Sales.xlsx'.format(path)
 path_supply = '{}\\data\\Supply.xlsx'.format(path)
 
-date = f'{datetime.now().day}/{datetime.now().month}/{datetime.now().year}'
+date = f'{datetime.now().day}.{datetime.now().month}.{datetime.now().year}'
 
 class Processing:
     

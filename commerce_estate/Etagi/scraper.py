@@ -25,7 +25,7 @@ def process_location(address, house_num):
 class Scraper:
     
     def __init__(self) -> None:
-        self.date = f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
+        self.date = f'{datetime.now().day}.{datetime.now().month}.{datetime.now().year}'
         
     def start_request(self):
         data = []

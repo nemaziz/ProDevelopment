@@ -2,8 +2,6 @@ import requests as rq
 import pandas as pd
 from datetime import datetime
 
-import schedule
-
 from headers import Headers_NF
 from process import Processing
 

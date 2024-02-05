@@ -34,7 +34,7 @@ class Scraper:
         get_room_attributes: собирает информацию из раздела 'О Помещении'
         get_building_attributes: собирает информацию из раздела "О здании'
         get_picture: собирает ссылку первой картинки в объявлении
-        start_scraper: запуск парсера по всем страницам
+        start_scraper: запуск парсера по всем страницам, собирает информацию, используя методов
     """
     
     def __init__(self) -> None:
@@ -62,6 +62,8 @@ class Scraper:
             объект BeautifulSoup
         """
         
+        
+        
         self.session.get(url = link)
         # print(self.session.page_source)
         page_source = self.session.page_source
@@ -71,7 +73,7 @@ class Scraper:
             soup = BeautifulSoup(page_source, 'html.parser')
         return soup
     
-    def get_metro(self, soup:BeautifulSoup) -> str:
+    def get_metro(self, soup:BeautifulSoup) -> str: 
         
         icon_metro = soup.select("span[class ^= 'geo-icons']")
         
@@ -81,7 +83,7 @@ class Scraper:
             # assert metro in metro_spb, metro
             return metro
         return 'Нет метро'
-            
+    
     def get_description(self, soup:BeautifulSoup) -> str:
         """Собирает описание из объявления
 
@@ -158,7 +160,7 @@ class Scraper:
             objects = soup.select("div[data-marker='item']")
             
             links =  ['https://www.avito.ru' + a.select_one("a[data-marker='item-title']").get('href') for a in objects]
-            # data['metro'] += [self.get_metro(a) for a in objects]
+            
             for link in links[:3]:
                 
                 soup = self.get_soup(link)
@@ -168,7 +170,7 @@ class Scraper:
                     if key not in data:
                         data[key] = ['' for i in range(len(data['url']))] + [value]
                     else:
-                        data[key] += value
+                        data[key] += [value]
                 print('1', data)
                 build_attrs = self.get_building_attributes(soup)
                 
@@ -176,21 +178,23 @@ class Scraper:
                     if key not in data:
                         data[key] = ['' for i in range(len(data['url']))] + [value]
                     else:
-                        data[key] += value
+                        data[key] += [value]
                 data['url'].append(link)
                 print('2', data)
                 time.sleep(3)
+                
+                for key, value in data.items():
+                    orig_ln = len(data['url'])
+                    for_ln = len(data[key])
+                    if for_ln != orig_ln:
+                        data[key] += ['' for a in range(orig_ln - for_ln)]
             
-            # data['name'] += [a.select_one("h3[itemprop='name']").text for a in objects]
-            # data['price'] += [a.select_one("meta[itemprop='price']").get('content') for a in objects]
-            # data['pricem2'] += [a.select("span[class^='price-root'] p")[-1].get_text(strip=True).replace('\xa0', '') for a in objects]
-            # data['address'] += [a.select_one("div[data-marker='item-address']").select_one('p').text for a in objects]
+            data['name'] += [a.select_one("[itemprop='name']").text for a in objects]
+            data['price'] += [a.select_one("meta[itemprop='price']").get('content') for a in objects]
+            data['pricem2'] += [a.select("span[class^='price-root'] p")[-1].get_text(strip=True).replace('\xa0', '') for a in objects]
+            data['address'] += [a.select_one("div[data-marker='item-address']").select_one('p').text for a in objects]
             # data['picture'] += [self.get_picture(a) for a in objects]
-        
-        # print(len(links))
-        # print(links[0], names[0], price[0], pricem2[0], address[0], metro[0])
-        # print(links[-1], names[-1], price[-1], pricem2[-1], address[-1], metro[-1])
-            
+            # data['metro'] += [self.get_metro(a) for a in objects]
         
         return data
 

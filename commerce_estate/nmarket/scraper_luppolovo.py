@@ -16,7 +16,7 @@ path_house = '{}\\ЖК.xlsx'.format(path)
 
 class Scraper:
     def __init__(self) -> None:
-        self.date = f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
+        self.date = f'{datetime.now().day}.{datetime.now().month}.{datetime.now().year}'
         
     def collect_offers(self):
         flats_v = []
@@ -53,11 +53,12 @@ class Scraper:
                     "Цена_за_м" : obj['pricePerSqMeter'],
                     "Базовая_цена" : obj['priceBaseTotal'],
                     "Вознаграждение" : obj['displayedAbsoluteSubagentCommissionValue'],
-                    'Тип_квартир' : 'Студия' if obj['isStudio'] else f"{obj['rooms']}ккв" 
+                    'Тип_квартир' : 'Студия' if obj['isStudio'] else f"{obj['rooms']}ккв",
+                    'Дата_сбора' : self.date
                 }
                 for obj in data if (type(obj['floors']) == int and obj['floors'] < 6) or (int(obj['houseFloorName']) < 6)
             ]
-            #print(page, len(local))
+            print(f'На странице {page} собраны {len(local)} объявлений')
             flats_v += local
             page += 1
             
@@ -71,7 +72,7 @@ def main():
     
     offers = scraper.collect_offers()
     new_offers = pd.DataFrame(offers)
-    new_offers['ЖК'] = new_offers['ЖК'].str.replace(' [\d] оч. .*', '')
+    new_offers['ЖК'] = new_offers['ЖК'].str.replace(' [\d] оч. .*', '', regex = True)
     
     houses = pd.read_excel(path_house)
     new_offers = new_offers.loc[new_offers['ЖК'].isin(houses['Имя'])].reset_index(drop = True)

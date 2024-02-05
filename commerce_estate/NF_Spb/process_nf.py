@@ -12,7 +12,7 @@ path = """O:\\Nematov\\Web_scraping\\ProDevelopment\\commerce_estate\\NF_Spb"""
 path_sales = '{}\\data\\Sales.xlsx'.format(path)
 path_supply = '{}\\data\\Supply.xlsx'.format(path)
 
-date = f'{datetime.now().day}/{datetime.now().month}/{datetime.now().year}'
+date = f'{datetime.now().day}.{datetime.now().month}.{datetime.now().year}'
 
 import re
 
