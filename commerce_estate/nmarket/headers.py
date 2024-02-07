@@ -1,7 +1,14 @@
 import requests as rq
 from get_keys import Keys_class
 import json
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
+session = rq.Session()
+retry = Retry(connect=3, backoff_factor=0.5)
+adapter = HTTPAdapter(max_retries=retry)
+session.mount('http://', adapter)
+session.mount('https://', adapter)
 
 key = Keys_class()
 
@@ -69,7 +76,7 @@ def rom(rr):
     
     headers = parse_header(headers)
     
-    dt = rq.get(url,
+    dt = session.get(url,
                headers = headers).json()
     
     return dt
@@ -92,7 +99,7 @@ def resp(url, source, page, hs = False):
             "pageSize":15
         }
     
-    resp = rq.post(
+    resp = session.post(
         f"{source}",
         headers=head(url),
         data=json.dumps(payload)
@@ -128,9 +135,11 @@ def jk_data(jk_id):
 
     url = f'https://spb.nmarket.pro/complex/GetComplexInfo?complexId={jk_id}'
 
-    dt = rq.get(url,
+    dt = session.get(url,
                 headers = headers
                ).json()
     
     
     return dt
+
+
