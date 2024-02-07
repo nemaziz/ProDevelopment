@@ -6,7 +6,4 @@ Thumbs.db
 *.pyc
 /venv/
 
-/data/Sales.xlsx
-/data/Supply.xlsx
-
-/data/
+data

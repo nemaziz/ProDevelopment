@@ -6,4 +6,4 @@ Thumbs.db
 *.pyc
 /venv/
 
-/data/
+data
