@@ -22,7 +22,7 @@ class Scraper:
     def __init__(self) -> None:
         self.session = cloudscraper.create_scraper()
         self.LinksCollector = LinksCollector()
-        self.date = f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
+        self.date = f'{datetime.now().day}.{datetime.now().month}.{datetime.now().year}'
         self.headers = rq.utils.default_headers()
 
     
@@ -138,7 +138,7 @@ class Scraper:
         except:
             description = ''
         
-        total_price = soup.select("div[class = 'detail-jk-preview__price-list active']")[0].text.replace('\xa0', '').strip()
+        total_price = soup.select("div[class = 'detail-jk-preview__price-list active']")[0].text.replace('\xa0', '').replace('м²', '').strip()
         
         try:
             price_wrap = soup.select("div[class = 'currency-select__wrap']")[0].text.strip()

@@ -133,7 +133,7 @@ def main():
     data = scraper.start_request()
 
     new_data = pd.DataFrame(data)
-    new_data.loc[:, 'Дата_сбора'] =  f'{datetime.now().day}_{datetime.now().month}_{datetime.now().year}'
+    new_data.loc[:, 'Дата_сбора'] =  f'{datetime.now().day}.{datetime.now().month}.{datetime.now().year}'
     print(f'Всего собрано {new_data.shape[0]} объявлений')
     #print(new_data)
     

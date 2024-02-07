@@ -11,8 +11,6 @@ from get_keys import Keys_class
 # path_house = f'{path}\\ЖК.xlsx' 
 
 
-
-
 date = f'{datetime.now().day}/{datetime.now().month}/{datetime.now().year}'
 
 class Processing:
@@ -41,6 +39,9 @@ class Processing:
         
         if not new_supply.empty:
             aps_data = new_supply['Ссылка'].apply(rom)
+            coords = [a['sectionPolygonCoordinates'].replace('[', '').replace(']', '').split(',')[0:2][:2] for a in aps_data ]
+            # crds = rom('5585929')['sectionPolygonCoordinates'].replace('[', '').replace(']', '').split(',')[0:2][:2]
+            # print(crds)
             new_supply = new_supply.join(
                 pd.DataFrame(
                 {
@@ -50,7 +51,9 @@ class Processing:
                     'Тип_дома': [a['house']['typeName'] for a in aps_data],
                     'Парковка': [a['house']['parkingName'] for a in aps_data],
                     'Вариант_оплаты': [a['house']['paymentOptionsString'] for a in aps_data],
-                    'Договор': [a['house']['contractTypeShortName'] for a in aps_data]
+                    'Договор': [a['house']['contractTypeShortName'] for a in aps_data],
+                    'latitude' : [a[0] for a in coords],
+                    'longitude' : [a[1] for a in coords]                    
                 },
                 index=new_supply.index
             ))
@@ -82,9 +85,9 @@ class Processing:
             supp_new = supp_new.join(
                 pd.DataFrame(
                     {
-                        'latitude' : [a['mapPoints'][0]['latitude'] for a in new_data],
-                        'longitude' : [a['mapPoints'][0]['longitude'] for a in new_data],
-                        'Достоинства' :  [ b['advantages'] for b in new_data]
+                        'latitude' : [a['mapPoints'][0]['latitude'] if 'mapPoints' in a else '' for a in new_data],
+                        'longitude' : [a['mapPoints'][0]['longitude'] if 'mapPoints' in a else '' for a in new_data],
+                        'Достоинства' :  ';'.join(a['advantages'] for a in new_data)
                     },
                     index = supp_new.index
                 )

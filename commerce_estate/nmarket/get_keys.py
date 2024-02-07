@@ -105,7 +105,7 @@ class Keys_class:
         self.browser.quit()
         
 
-key = Keys_class()
+# key = Keys_class()
 # print(key.offers_get_key())
 # print(key.pers_get_key('3991855'))
 # print(key.house_get_key('77597'))
