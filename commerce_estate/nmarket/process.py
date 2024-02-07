@@ -82,16 +82,17 @@ class Processing:
         if not supp_new.empty:
             new_data = supp_new['Ссылка'].apply(jk_data)
             
+            print(new_data[0]['advantages'])
             supp_new = supp_new.join(
                 pd.DataFrame(
                     {
                         'latitude' : [a['mapPoints'][0]['latitude'] if 'mapPoints' in a else '' for a in new_data],
                         'longitude' : [a['mapPoints'][0]['longitude'] if 'mapPoints' in a else '' for a in new_data],
-                        'Достоинства' :  ';'.join(a['advantages'] for a in new_data)
+                        'Достоинства' :  [a['advantages'] for a in new_data]
                     },
                     index = supp_new.index
                 )
-            )
+            )  
                     
             new_old_supp = pd.concat([old_jk, supp_new])
             self.write_data(new_old_supp, path_house)

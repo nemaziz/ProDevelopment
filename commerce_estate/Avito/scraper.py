@@ -62,10 +62,7 @@ class Scraper:
             объект BeautifulSoup
         """
         
-        
-        
         self.session.get(url = link)
-        # print(self.session.page_source)
         page_source = self.session.page_source
         try:
             soup = BeautifulSoup(page_source, 'lxml')
@@ -97,8 +94,8 @@ class Scraper:
         address = soup.select("div[itemprop = 'description']").text.strip()
         return address
     
-    def get_room_attributes(self, soup:BeautifulSoup) -> dict:
-        """Собираем характеристики из отдела 'О помещении'
+    def get_room_build_attributes(self, soup:BeautifulSoup) -> dict:
+        """Собираем характеристики из отдела 'О помещении' и 'О здании'
 
         Аргументы:
             soup (bs4): объект bs4
@@ -107,7 +104,9 @@ class Scraper:
             dict: словарь с структурой: {признак: значений}
         """
         
-        characters = [a.text.replace(u'\xa0', '') for a in soup.select("li[class = 'params-paramsList__item-appQw']")]
+        characters = [[b.text.replace('\xa0', '') for b in a.select("li") ] for a in s.select('[data-marker="item-view/item-params"]')]
+        characters = sum(characters, [])
+        
         result = {a.split(':')[0] : a.split(':')[1]
                   for a in characters}
         
@@ -193,8 +192,7 @@ class Scraper:
             data['price'] += [a.select_one("meta[itemprop='price']").get('content') for a in objects]
             data['pricem2'] += [a.select("span[class^='price-root'] p")[-1].get_text(strip=True).replace('\xa0', '') for a in objects]
             data['address'] += [a.select_one("div[data-marker='item-address']").select_one('p').text for a in objects]
-            # data['picture'] += [self.get_picture(a) for a in objects]
-            # data['metro'] += [self.get_metro(a) for a in objects]
+            data['picture'] += [a.select_one('[data-marker ^= "slider-image/image"]').get('data-marker').replace('slider-image/image-', '') for a in objects]
         
         return data
 

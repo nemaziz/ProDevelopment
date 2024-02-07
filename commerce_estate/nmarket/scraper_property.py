@@ -66,7 +66,7 @@ class Scraper:
     def collect_house(self):
         house_nc = []
         page = 1
-        while page < 5:
+        while page < 3:
             url = f'''https://spb.nmarket.pro/search/complexesgrid?isSmartLineMode=false&searchString=%7B%22TTypeObjNewBuildId%22:%5B%222%22,%221%22%5D%7D&page={page}'''
             source = '''https://spb.nmarket.pro/search/complexesgriddata?searchString=%7B%22TTypeObjNewBuildId%22%3A%5B%222%22%2C%221%22%5D%7D&isSmartLineMode=false'''
 
@@ -96,7 +96,7 @@ class Scraper:
             ]
                 
             print(f'На странице {page} собрано {len(local)} объявлений о ЖК')
-            print(local[-1])
+            # print(local[-1])
             house_nc += local
             page += 1
         
@@ -110,7 +110,7 @@ def main():
     
     offers = scraper.collect_offers()
     new_offers = pd.DataFrame(offers)
-    new_offers['ЖК'] = new_offers['ЖК'].str.replace(' [\d] оч. .*', '', regex = True)
+    new_offers['ЖК'] = new_offers['ЖК'].str.replace(' [\d] оч. .*', '', regex = True) 
     processor.update_data(new_offers, path_sales, path_supply)
     print("Данные объявлений обновлены")
     

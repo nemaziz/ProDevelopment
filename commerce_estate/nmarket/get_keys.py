@@ -11,7 +11,7 @@ chrome_options = Options()
 # options = webdriver.ChromeOptions()
 # chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
 chrome_options.add_argument("--log-level=3")
-chrome_options.add_argument("--headless")
+# chrome_options.add_argument("--headless")
 #--log-level=3 --headless
             
 class Keys_class:
@@ -33,11 +33,15 @@ class Keys_class:
         
         self.browser.get('https://auth.nmarket.pro/Account/Login?ReturnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Decatalog_spa%26redirect_uri%3Dhttps%253A%252F%252Fspb.nmarket.pro%252F%26response_type%3Did_token%2520token%26scope%3Dopenid%2520profile%2520email%2520phone%2520role%2520permission%2520ecatalogApi%26state%3D39ded81c8cb74f04a0a4b9848b29f243%26nonce%3D71d6b39f09cc475ba3aea00a287ace3e')
         time.sleep(1)
+        to_click = self.browser.find_element(By.ID ,  'mat-tab-label-0-1' )
+        to_click.click()
+        
+        time.sleep(1)
         login  =  self.browser.find_element(By.ID ,  'login-input' )
         login.send_keys(login_pass + Keys.RETURN)
         time.sleep(1)
         
-        password  =  self.browser.find_element(By.ID ,  'mat-input-1' )
+        password  =  self.browser.find_element(By.ID ,  'mat-input-2' )
         password.send_keys(pass_pass + Keys.RETURN)
         time.sleep(1)
     
@@ -103,11 +107,5 @@ class Keys_class:
     
     def close_browser(self):
         self.browser.quit()
-        
-
-# key = Keys_class()
-# print(key.offers_get_key())
-# print(key.pers_get_key('3991855'))
-# print(key.house_get_key('77597'))
 
 
