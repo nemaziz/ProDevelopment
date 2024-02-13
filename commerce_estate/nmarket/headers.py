@@ -56,7 +56,7 @@ def rom(rr):
     url = f'https://spb.nmarket.pro/presentation-new/api/presentation/realtyobject/{rid}'
     
     global auth_pers
-    if auth_pers == None:
+    while auth_pers == None:
         auth_pers = key.pers_get_key(rid)
     
     headers = f"""Accept:application/json, text/plain, */*

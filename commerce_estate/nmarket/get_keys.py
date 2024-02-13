@@ -69,6 +69,7 @@ class Keys_class:
 
     def pers_get_key(self, offer_id):
         """Получить ключ для авторизации со страницы объявления"""
+        auth_pers = None
         
         self.open_browser()
         self.authentication()

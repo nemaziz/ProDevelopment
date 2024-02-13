@@ -19,7 +19,7 @@ class Scraper:
     def collect_offers(self):
         flats_v = []
         page = 1
-        while page < 5:
+        while True:
             url = f'''https://spb.nmarket.pro/search/apartmentgrid?isSmartLineMode=false&searchString=%7B%22TTypeObjNewBuildId%22:%5B%222%22,%221%22%5D%7D&page={page}'''
             source = '''https://spb.nmarket.pro/search/apartmentgriddata?searchString=%7B%22TTypeObjNewBuildId%22%3A%5B%222%22%2C%221%22%5D%7D&isSmartLineMode=false'''
             
@@ -66,7 +66,7 @@ class Scraper:
     def collect_house(self):
         house_nc = []
         page = 1
-        while page < 3:
+        while True:
             url = f'''https://spb.nmarket.pro/search/complexesgrid?isSmartLineMode=false&searchString=%7B%22TTypeObjNewBuildId%22:%5B%222%22,%221%22%5D%7D&page={page}'''
             source = '''https://spb.nmarket.pro/search/complexesgriddata?searchString=%7B%22TTypeObjNewBuildId%22%3A%5B%222%22%2C%221%22%5D%7D&isSmartLineMode=false'''
 

@@ -5,13 +5,7 @@ import pandas as pd
 from headers import *
 from get_keys import Keys_class
 
-# path = """O:\\Отдел стратегического развития\\Исследовательская работа\\Анализ рынков недвижимости\\Анализ апартаментов\\Статистические данные\\nmarket"""
-# path_sales = f'{path}\\Продажи_nmarket.xlsx'
-# path_supply = f'{path}\\Предложение_nmarket.xlsx' 
-# path_house = f'{path}\\ЖК.xlsx' 
-
-
-date = f'{datetime.now().day}/{datetime.now().month}/{datetime.now().year}'
+date = f'{datetime.now().day}.{datetime.now().month}.{datetime.now().year}'
 
 class Processing:
     
@@ -39,9 +33,8 @@ class Processing:
         
         if not new_supply.empty:
             aps_data = new_supply['Ссылка'].apply(rom)
-            coords = [a['sectionPolygonCoordinates'].replace('[', '').replace(']', '').split(',')[0:2][:2] for a in aps_data ]
-            # crds = rom('5585929')['sectionPolygonCoordinates'].replace('[', '').replace(']', '').split(',')[0:2][:2]
-            # print(crds)
+            coords = [str(a['sectionPolygonCoordinates']).replace('[', '').replace(']', '').split(',')[0:2][:2] \
+                      if a['sectionPolygonCoordinates'] else '  ' for a in aps_data]
             new_supply = new_supply.join(
                 pd.DataFrame(
                 {
@@ -82,7 +75,6 @@ class Processing:
         if not supp_new.empty:
             new_data = supp_new['Ссылка'].apply(jk_data)
             
-            print(new_data[0]['advantages'])
             supp_new = supp_new.join(
                 pd.DataFrame(
                     {
