@@ -4,10 +4,6 @@ from datetime import datetime
 from headers import *
 from process import Processing
 
-# path = """O:\\Отдел стратегического развития\\Проектная работа\\Проекты ИЖС\\Проект ТНХ Лупполово 1 га\\Статистичекие данные\\Данные по nmarket"""
-# gpath_supp = f'{path}\\Предложение_'
-# gpath_supp_sell = f'{path}\\Продажи_'
-
 path = """O:\\Nematov\\Web_scraping\\ProDevelopment\\commerce_estate\\nmarket\\data\\Luppolovo"""
 path_sales = '{}\\Sales.xlsx'.format(path)
 path_supply = '{}\\Supply.xlsx'.format(path)
